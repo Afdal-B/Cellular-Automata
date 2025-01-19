@@ -21,7 +21,7 @@ class GameOfLife:
         self.grid = [[0 for _ in range(size[1])] for _ in range(size[0])]  
         self.running = True
         self.paused = True
-
+        self.show_dead = False
         # Initialize Pygame
         pg.init()
         self.screen = pg.display.set_mode((size[1] * cell_size, size[0] * cell_size))
@@ -92,7 +92,7 @@ class GameOfLife:
         for y in range(self.size[0]):
             for x in range(self.size[1]):
                 next_grid[y][x] = self.getNextState((x, y))
-                if self.grid[y][x] == 1 and next_grid[y][x] == 0:
+                if self.show_dead and self.grid[y][x] == 1 and next_grid[y][x] == 0:
                     pg.draw.rect(self.screen, self.dead_color, (x * self.cell_size, y * self.cell_size, self.cell_size, self.cell_size))
                     pg.display.flip()
                     pg.time.wait(50)
@@ -124,6 +124,8 @@ class GameOfLife:
                     self.paused = not self.paused
                 elif event.key == pg.K_r:
                     self.grid = [[0 for _ in range(self.size[1])] for _ in range(self.size[0])]
+                elif event.key == pg.K_d:
+                    self.show_dead = not self.show_dead
             elif event.type == pg.MOUSEBUTTONDOWN:
                 x, y = pg.mouse.get_pos()
                 grid_x, grid_y = x // self.cell_size, y // self.cell_size
@@ -137,7 +139,7 @@ class GameOfLife:
             if not self.paused:
                 self.updateGrid()
             self.drawGrid()
-            self.clock.tick(3)
+            self.clock.tick(10)
         pg.quit()
 
     
